@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+var pixels = [];
+function recomputeArray() {
+    var nums = '';
+    for (var x = 0; x < pixels.length; x++) {
+        var val = 0;
+        var len = pixels[x].length;
+        for (var y = 0; y < len; y++) {
+            var on = pixels[x][len - y - 1].dataset.selected === 'on';
+            if (on) val |= 0x01 << (y + 1);
+        }
+        nums += '0x' + val.toString(16) + ', ';
+    }
+    nums = nums.substring(0, nums.lastIndexOf(','));
+
+    var out = document.getElementById('output-array');
+    out.textContent = nums;
+}
+
+window.onload = function() {
+    for (var x = 0; x < 5; x++) {
+        pixels[x] = [];
+        for (var y = 0; y < 7; y++) {
+            var pix = document.createElement('div');
+            pix.style.position = 'absolute';
+            pix.style.top = 50 + y * 32 + 'px';
+            pix.style.left = 20 + x * 32 + 'px';
+            pix.style.width = '32px';
+            pix.style.height = '32px';
+            pix.style.backgroundColor = '#000000';
+            pix.dataset.selected = 'off';
+            pix.onclick = function() {
+                if (this.dataset.selected === 'off') {
+                    this.dataset.selected = 'on';
+                    this.style.backgroundColor = '#00ffff';
+                } else {
+                    this.dataset.selected = 'off';
+                    this.style.backgroundColor = '#000000';
+                }
+                recomputeArray();
+            };
+            document.body.appendChild(pix);
+            pixels[x][y] = pix;
+        }
+    }
+};
+</script>
+</head>
+<body>
+<pre id='output-array'>toggle some pixels</pre>
+</body>
+</html>
+
