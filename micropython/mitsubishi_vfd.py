@@ -50,9 +50,13 @@ def vfd_write_string( text: str):
 def vfd_init():
     vfd_set_width(16)
     vfd_set_display_mode(DISP_MODE_ALL_ON)
+    for pos in range(9):
+        vfd_enable_cursor(pos)
     time.sleep(1)
     vfd_set_display_mode(DISP_MODE_NORMAL)
     vfd_set_position(0)
+    for pos in range(9):
+        vfd_disable_cursor(pos)
     vfd_set_auto_increment(1)
     vfd_write_string("                ")
 
@@ -71,11 +75,12 @@ def vfd_set_position(pos: int):
 def vfd_set_auto_increment(auto_increment: int):
     vfd_write_byte(VFD_CMD_SET_AUTO_INCREMENT | (auto_increment & 0x01))
 
-def vfd_enable_cursor():
-    vfd_write_byte(VFD_CMD_CURSOR_ON)
+# cursor is what the mid/lower dot is called
+def vfd_enable_cursor(pos: int):
+    vfd_write_byte(VFD_CMD_CURSOR_ON | pos)
 
-def vfd_disable_cursor():
-    vfd_write_byte(VFD_CMD_CURSOR_OFF)
+def vfd_disable_cursor(pos: int):
+    vfd_write_byte(VFD_CMD_CURSOR_OFF | pos)
 
 def vfd_set_display_mode(disp_mode: int):
     vfd_write_byte(VFD_CMD_DISPLAY_MODE | (disp_mode & 0x03))
@@ -85,6 +90,11 @@ def vfd_define_custom_char(loc: int, data: list):
     vfd_write_byte(loc & 0x0f)
     for k in range(5):
         vfd_write_byte(data[k])
+
+# characters 0x90 and on address the custom chars
+def vfd_show_custom_char(loc: int):
+    vfd_write_byte(0x90 | loc)
+
 
 def vfd_write_output_port(state: int):
     vfd_write_byte(VFD_CMD_OUTPUT_PORT | (state & 0x03))
