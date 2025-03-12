@@ -1,7 +1,7 @@
 # mitsubishi-vfd
 
 This is an Arduino library that allows the board to control vacuum
-fluorescent displays based on the Mitsubishi M66004.
+fluorescent displays based on the Mitsubishi M66004 as well as the M66005.
 
 ## Example
 
@@ -38,3 +38,6 @@ for use with `vfd_define_custom_char()`.
 
 Further documentation is available in `mitsubishi_vfd.h`.
 
+## Micropython version
+
+The micropython version was tested on an ESP32, but should work on other devices with SPI too. It allows for easy fiddling in the python REPL.
